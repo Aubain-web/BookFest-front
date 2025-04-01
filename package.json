@@ -5,9 +5,11 @@
     "@mui/icons-material": "^7.0.1",
     "@mui/material": "^7.0.1",
     "@mui/toolpad": "^0.1.51",
+    "@toolpad/core": "^0.13.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-router": "^7.4.1"
+    "react-router": "^7.4.1",
+    "react-router-dom": "^7.4.1"
   },
   "name": "bookfest_frontend",
   "version": "1.0.0",
