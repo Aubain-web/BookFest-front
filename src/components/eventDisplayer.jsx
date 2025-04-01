@@ -1,8 +1,10 @@
 import React from 'react';
 import { Card, CardContent, CardMedia, Typography, Grid, Box } from '@mui/material';
+import useFetch from "../hooks/useFetch";
 
 const EventDisplayer = ({ events }) => {
-    const defaultEvents = [
+    const dataEvents = useFetch("http://localhost:8081/api/events/allevents");
+    /*const defaultEvents = [
         {
             id: 1,
             title: "Book Fair 2025",
@@ -24,25 +26,28 @@ const EventDisplayer = ({ events }) => {
             description: "Meet your favorite authors and get your books signed",
             image: "https://source.unsplash.com/random/300×200/?author"
         }
-    ];
-
-    const displayEvents = events || defaultEvents;
+    ];*/
+    //
+    // const displayEvents = events
 
     return (
         <Box sx={{ flexGrow: 1, padding: 3 }}>
             <Grid container spacing={4}>
-                {displayEvents.map((event) => (
+                {dataEvents.map((event) => (
                     <Grid item xs={12} sm={6} md={4} key={event.id}>
                         <Card sx={{ maxWidth: 345, height: '100%', display: 'flex', flexDirection: 'column' }}>
                             <CardMedia
                                 component="img"
                                 height="140"
-                                image={event.image}
-                                alt={event.title}
+                                image={event.imageUrl}
+                                alt={event.name}
                             />
                             <CardContent sx={{ flexGrow: 1 }}>
                                 <Typography gutterBottom variant="h5" component="div">
-                                    {event.title}
+                                    {event.name} - {event.time} - {event.location}
+                                </Typography>
+                                <Typography variant="body2" color="text.secondary">
+                                    {event.price}
                                 </Typography>
                                 <Typography variant="body2" color="text.secondary">
                                     {event.date}

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Box, TextField, Button, Typography, Container, Paper } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/header';
+import usePost from "../hooks/usePost";
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -11,16 +12,14 @@ const Login = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Simple validation
         if (!email || !password) {
             setError('Please fill in all fields');
             return;
         }
+        usePost("http://localhost:8080/api/auth/login", { email, password })
 
-        // Mock login - in a real app, you would call an API
         console.log('Logging in with:', email, password);
 
-        // Simulate successful login and redirect
         setTimeout(() => {
             navigate('/dashboard');
         }, 1000);
@@ -77,7 +76,7 @@ const Login = () => {
                         <Box textAlign="center">
                             <Typography variant="body2">
                                 Don't have an account?{' '}
-                                <Button href="/signin" sx={{ p: 0 }} color="primary">
+                                <Button href="/signin" sx={{ p: 0 }} onClick={signup} color="primary">
                                     Sign Up
                                 </Button>
                             </Typography>

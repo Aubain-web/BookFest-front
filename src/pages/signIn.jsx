@@ -28,7 +28,6 @@ const SignIn = async (provider, formData) => {
 export default function NotificationsSignInPageError() {
   const theme = useTheme();
   return (
-    // preview-start
     <AppProvider theme={theme}>
       <SignInPage
         signIn={SignIn}
@@ -36,6 +35,5 @@ export default function NotificationsSignInPageError() {
         slotProps={{ emailField: { autoFocus: false }, form: { noValidate: true } }}
       />
     </AppProvider>
-    // preview-end
   );
 }
