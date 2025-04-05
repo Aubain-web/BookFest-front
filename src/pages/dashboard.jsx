@@ -1,12 +1,11 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+//import PropTypes from 'prop-types';
 import { Box, Typography, Container, Grid, Paper } from '@mui/material';
 import Header from '../components/header';
 import { UseTheme } from '../utils/useTheme';
 import { ThemeProvider } from '@mui/material/styles';
 
 function DashboardContent() {
-    // Mock data for dashboard
     const userEvents = [
         { id: 1, name: "Book Fair 2025", registered: "Yes", date: "April 15, 2025" },
         { id: 2, name: "Poetry Reading", registered: "No", date: "April 20, 2025" },
@@ -18,7 +17,6 @@ function DashboardContent() {
             <Header />
             <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
                 <Grid container spacing={3}>
-                    {/* Welcome section */}
                     <Grid item xs={12}>
                         <Paper
                             sx={{

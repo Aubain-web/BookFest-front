@@ -20,7 +20,7 @@ const Header = () => {
                         BookFest
                     </Typography>
                     <Button color="inherit" href="/login">Login</Button>
-                    <Button color="inherit" href="/signin">Sign In</Button>
+                    <Button color="inherit" href="/signUp">Sign Up</Button>
                 </Toolbar>
             </AppBar>
         </Box>

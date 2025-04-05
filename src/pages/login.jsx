@@ -9,20 +9,27 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
+    const { postData, loading } = usePost();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (!email || !password) {
             setError('Please fill in all fields');
             return;
         }
-        usePost("http://localhost:8080/api/auth/login", { email, password })
 
-        console.log('Logging in with:', email, password);
+        try {
+            const result = await postData("http://localhost:8080/api/auth/login", { email, password });
 
-        setTimeout(() => {
-            navigate('/dashboard');
-        }, 1000);
+            if (result && result.token) {
+                navigate('/dashboard');
+            } else {
+                setError('Invalid login credentials');
+            }
+        } catch (err) {
+            setError('Login failed. Please try again.');
+            console.error('Login error:', err);
+        }
     };
 
     return (
@@ -69,14 +76,15 @@ const Login = () => {
                             type="submit"
                             fullWidth
                             variant="contained"
+                            disabled={loading}
                             sx={{ mt: 3, mb: 2 }}
                         >
-                            Sign In
+                            {loading ? 'Signing in...' : 'Sign In'}
                         </Button>
                         <Box textAlign="center">
                             <Typography variant="body2">
                                 Don't have an account?{' '}
-                                <Button href="/signin" sx={{ p: 0 }} onClick={signup} color="primary">
+                                <Button href="/signin" sx={{ p: 0 }} color="primary">
                                     Sign Up
                                 </Button>
                             </Typography>
