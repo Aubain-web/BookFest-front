@@ -16,6 +16,7 @@ import {
     Visibility,
     VisibilityOff
 } from '@mui/icons-material';
+import {redirect} from "react-router";
 
 const SignUp = () => {
     const [formValues, setFormValues] = useState({
@@ -70,6 +71,7 @@ const SignUp = () => {
 
                 if (response.ok) {
                     console.log('Registration successful');
+                    redirect('/login');
                 } else {
                     console.error('Registration failed');
                 }

@@ -1,14 +1,18 @@
 import React from 'react';
-import usePost from "../hooks/usePost";
+import { usePost } from "../hooks/usePost";
 
 const BuyTicker = ({ ticker, price, quantity, onBuy }) => {
-    const handleBuy = () => {
-        try{
-            const response = usePost("http://localhost:8282/api/buy", { ticker, price, quantity });
+    const { postData, loading, error } = usePost();
+
+    const handleBuy = async () => {
+        try {
+            const response = await postData("http://localhost:8181/api/authbuy-ticket", { ticker, price, quantity });
             console.log(response);
+            alert(`Buying ${quantity} of ${ticker} at $${price}`);
+            onBuy(ticker, price, quantity);
+        } catch (err) {
+            alert(`Error: ${err.message}`);
         }
-        alert(`Buying ${quantity} of ${ticker} at $${price}`);
-        onBuy(ticker, price, quantity);
     };
 
     return (
@@ -16,9 +20,12 @@ const BuyTicker = ({ ticker, price, quantity, onBuy }) => {
             <h2>{ticker}</h2>
             <p>Quantity: {quantity}</p>
             <p>Price: ${price}</p>
-            <button onClick={handleBuy}>Buy</button>
+            <button onClick={handleBuy} disabled={loading}>
+                {loading ? 'Processing...' : 'Buy'}
+            </button>
+            {error && <p style={{ color: 'red' }}>{error.message}</p>}
         </div>
     );
 }
 
-export default BuyTicker
+export default BuyTicker;

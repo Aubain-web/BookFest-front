@@ -1,16 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardMedia, Typography, Grid, Box, CircularProgress } from '@mui/material';
 import useFetch from "../hooks/useFetch";
 import Button from '@mui/joy/Button';
-import Stack from '@mui/joy/Stack';
 import Modal from '@mui/joy/Modal';
 import ModalClose from '@mui/joy/ModalClose';
-import ModalDialog, { ModalDialogProps } from '@mui/joy/ModalDialog';
+import ModalDialog from '@mui/joy/ModalDialog';
 import DialogTitle from '@mui/joy/DialogTitle';
 import DialogContent from '@mui/joy/DialogContent';
 
 const EventDisplayer = () => {
     const { data, loading, error } = useFetch("http://localhost:8282/api/events/allevents");
+    const [open, setOpen] = useState(false);
+    const [selectedEvent, setSelectedEvent] = useState(null);
 
     const defaultEvents = [
         {
@@ -47,6 +48,11 @@ const EventDisplayer = () => {
 
     const displayEvents = (data && data.length > 0) ? data : defaultEvents;
 
+    const handleEventClick = (event) => {
+        setSelectedEvent(event);
+        setOpen(true);
+    };
+
     if (loading) {
         return (
             <Box sx={{ display: 'flex', justifyContent: 'center', p: 5 }}>
@@ -65,17 +71,22 @@ const EventDisplayer = () => {
 
     return (
         <Box sx={{ flexGrow: 1, padding: 3 }}>
-            <Button
-                variant="outlined"
-                color="neutral"
-                onClick={() => {
-                    setVariant('outlined');
-                }}
-            >
             <Grid container spacing={4}>
                 {displayEvents.map((event, index) => (
                     <Grid item xs={12} sm={6} md={4} key={event.id || index}>
-                        <Card sx={{ maxWidth: 345, height: '100%', display: 'flex', flexDirection: 'column' }}>
+                        <Card
+                            sx={{
+                                maxWidth: 345,
+                                height: '100%',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                cursor: 'pointer',
+                                '&:hover': {
+                                    boxShadow: 6
+                                }
+                            }}
+                            onClick={() => handleEventClick(event)}
+                        >
                             <CardMedia
                                 component="img"
                                 height="140"
@@ -90,7 +101,7 @@ const EventDisplayer = () => {
                                     {event.time} - {event.location}
                                 </Typography>
                                 <Typography variant="body2" color="text.secondary">
-                                    {event.price} $
+                                    {event.price}
                                 </Typography>
                                 <Typography variant="body2" color="text.secondary">
                                     {event.date}
@@ -103,7 +114,32 @@ const EventDisplayer = () => {
                     </Grid>
                 ))}
             </Grid>
-            </Button>
+
+            <Modal open={open} onClose={() => setOpen(false)}>
+                <ModalDialog>
+                    <DialogTitle>{selectedEvent?.name}</DialogTitle>
+                    <ModalClose />
+                    <DialogContent>
+                        {selectedEvent && (
+                            <>
+                                <Typography level="body-sm">Date: {selectedEvent.date}</Typography>
+                                <Typography level="body-sm">Time: {selectedEvent.time}</Typography>
+                                <Typography level="body-sm">Location: {selectedEvent.location}</Typography>
+                                <Typography level="body-sm">Price: {selectedEvent.price}</Typography>
+                                <Typography level="body-md" sx={{ mt: 2 }}>
+                                    {selectedEvent.description}
+                                </Typography>
+                                <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
+                                    <Button onClick={() => setOpen(false)}>Close</Button>
+                                    <Button variant="solid" color="primary" sx={{ ml: 1 }}>
+                                        Register
+                                    </Button>
+                                </Box>
+                            </>
+                        )}
+                    </DialogContent>
+                </ModalDialog>
+            </Modal>
         </Box>
     );
 };

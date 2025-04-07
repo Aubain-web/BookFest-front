@@ -1,9 +1,12 @@
 import { useState } from 'react';
 
-export default function usePost() {
+export function usePost() {
     const [response, setResponse] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+
+    const getToken = () => localStorage.getItem('bookfest_token');
+    const setToken = (token) => localStorage.setItem('bookfest_token', token);
 
     const postData = async (url, data) => {
         setLoading(true);
@@ -11,7 +14,7 @@ export default function usePost() {
         setResponse(null);
 
         try {
-            const token = localStorage.getItem('bookfest_token');
+            const token = getToken();
             const headers = {
                 'Content-Type': 'application/json',
                 ...(token && { 'Authorization': `Bearer ${token}` })
@@ -32,7 +35,7 @@ export default function usePost() {
             setResponse(result);
 
             if (result.token) {
-                localStorage.setItem('bookfest_token', result.token);
+                setToken(result.token);
             }
 
             return result;
@@ -46,3 +49,5 @@ export default function usePost() {
 
     return { postData, response, loading, error };
 }
+
+export default usePost;

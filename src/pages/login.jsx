@@ -13,13 +13,17 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError('');
+
         if (!email || !password) {
             setError('Please fill in all fields');
             return;
         }
 
+        console.log('Request Payload:', { email, password });
+
         try {
-            const result = await postData("http://localhost:8080/api/auth/login", { email, password });
+            const result = await postData("http://localhost:8181/api/auth/login", { email, password });
 
             if (result && result.token) {
                 navigate('/dashboard');
@@ -31,6 +35,7 @@ const Login = () => {
             console.error('Login error:', err);
         }
     };
+
 
     return (
         <div>
