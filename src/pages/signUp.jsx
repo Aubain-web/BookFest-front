@@ -16,9 +16,10 @@ import {
     Visibility,
     VisibilityOff
 } from '@mui/icons-material';
-import {redirect} from "react-router";
+import { useNavigate } from 'react-router-dom';
 
 const SignUp = () => {
+    const navigate = useNavigate();
     const [formValues, setFormValues] = useState({
         username: '',
         email: '',
@@ -71,7 +72,7 @@ const SignUp = () => {
 
                 if (response.ok) {
                     console.log('Registration successful');
-                    redirect('/login');
+                    navigate('/login');
                 } else {
                     console.error('Registration failed');
                 }
@@ -172,7 +173,6 @@ const SignUp = () => {
                         fullWidth
                         variant="contained"
                         sx={{ mt: 3, mb: 2, py: 1.5 }}
-                        disabled={Object.keys(errors).length > 0}
                     >
                         Sign Up
                     </Button>
