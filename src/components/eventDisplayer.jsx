@@ -7,6 +7,7 @@ import ModalClose from '@mui/joy/ModalClose';
 import ModalDialog from '@mui/joy/ModalDialog';
 import DialogTitle from '@mui/joy/DialogTitle';
 import DialogContent from '@mui/joy/DialogContent';
+import BuyTicker from "./buyTicker";
 
 const EventDisplayer = () => {
     const { data, loading, error } = useFetch("http://localhost:8282/api/events/allevents");
@@ -129,6 +130,7 @@ const EventDisplayer = () => {
                                 <Typography level="body-md" sx={{ mt: 2 }}>
                                     {selectedEvent.description}
                                 </Typography>
+                                <Typography> <BuyTicker/> </Typography>
                                 <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
                                     <Button onClick={() => setOpen(false)}>Close</Button>
                                     <Button variant="solid" color="primary" sx={{ ml: 1 }}>
