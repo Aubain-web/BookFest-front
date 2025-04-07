@@ -18,7 +18,7 @@ const BuyTicker = ({ ticker, price, quantity, onBuy }) => {
     return (
         <div>
             <h2>{ticker}</h2>
-            <p>Quantity: {quantity}</p>
+            <button onClick={}><p>Quantity: {quantity}</p></button>
             <p>Price: ${price}</p>
             <button onClick={handleBuy} disabled={loading}>
                 {loading ? 'Processing...' : 'Buy'}
