@@ -13,6 +13,7 @@ const EventDisplayer = () => {
     const { data, loading, error } = useFetch("http://localhost:8282/api/events/allevents");
     const [open, setOpen] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState(null);
+    const [purchaseComplete, setPurchaseComplete] = useState(false);
 
     const defaultEvents = [
         {
@@ -51,7 +52,37 @@ const EventDisplayer = () => {
 
     const handleEventClick = (event) => {
         setSelectedEvent(event);
+        setPurchaseComplete(false);
         setOpen(true);
+    };
+
+    const handlePurchaseComplete = (ticker, price, quantity) => {
+        setPurchaseComplete(true);
+    };
+
+    // Extract numeric price from price string or number (e.g., "$10" => 10)
+    const getNumericPrice = (priceValue) => {
+        // Handle null or undefined
+        if (priceValue == null) return 0;
+
+        // If it's already a number, return it
+        if (typeof priceValue === 'number') return priceValue;
+
+        // Convert to string
+        const priceString = String(priceValue);
+
+        // Check for free entry
+        if (priceString.toLowerCase().includes('free')) return 0;
+
+        // Extract numbers from string using regex
+        const match = priceString.match(/(\d+(\.\d+)?)/);
+        return match ? parseFloat(match[1]) : 0;
+    };
+
+    const shouldShowBuyTicket = (event) => {
+        if (!event) return false;
+        const price = getNumericPrice(event.price);
+        return price > 0;
     };
 
     if (loading) {
@@ -130,12 +161,32 @@ const EventDisplayer = () => {
                                 <Typography level="body-md" sx={{ mt: 2 }}>
                                     {selectedEvent.description}
                                 </Typography>
-                                <Typography> <BuyTicker/> </Typography>
+
+                                {!purchaseComplete && shouldShowBuyTicket(selectedEvent) && (
+                                    <Box sx={{ mt: 2, mb: 2 }}>
+                                        <BuyTicker
+                                            ticker={selectedEvent.name}
+                                            price={getNumericPrice(selectedEvent.price)}
+                                            initialQuantity={1}
+                                            onBuy={handlePurchaseComplete}
+                                        />
+                                    </Box>
+                                )}
+
+                                {/* Show confirmation message if purchase is complete */}
+                                {purchaseComplete && (
+                                    <Typography level="body-md" sx={{ mt: 2, color: 'green' }}>
+                                        Purchase complete! Thank you for your order.
+                                    </Typography>
+                                )}
+
                                 <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
                                     <Button onClick={() => setOpen(false)}>Close</Button>
-                                    <Button variant="solid" color="primary" sx={{ ml: 1 }}>
-                                        Register
-                                    </Button>
+                                    {!shouldShowBuyTicket(selectedEvent) && (
+                                        <Button variant="solid" color="primary" sx={{ ml: 1 }}>
+                                            Register
+                                        </Button>
+                                    )}
                                 </Box>
                             </>
                         )}
